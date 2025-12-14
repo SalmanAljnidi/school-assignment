@@ -56,6 +56,34 @@ th{background:var(--soft);font-weight:800}
   th{background:#f5f5f5 !important; -webkit-print-color-adjust:exact; print-color-adjust:exact}
   .signature{font-size:20px;color:#000}
 }
+
+/* أزرار تواصل عائمة */
+.social-fab{
+  position: fixed;
+  left: 16px;
+  bottom: 16px;
+  display: flex;
+  gap: 10px;
+  z-index: 9999;
+}
+.fab-btn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 12px;
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  color: #111827;
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 13px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.08);
+}
+.fab-btn:hover{ transform: translateY(-1px); }
+.fab-btn.wa{ border-color:#bbf7d0; }
+.fab-btn.snap{ border-color:#fde68a; }
+
 </style>
 </head>
 <body>
@@ -485,5 +513,17 @@ loadState();
 // احفظ عند الخروج كاحتياط
 window.addEventListener('beforeunload', saveState);
 </script>
+
+<!-- أزرار تواصل -->
+<div class="social-fab no-print">
+  <a class="fab-btn wa" target="_blank" rel="noopener"
+     href="https://wa.me/966566996166"
+     title="تواصل عبر واتساب">واتساب</a>
+
+  <a class="fab-btn snap" target="_blank" rel="noopener"
+     href="https://snapchat.com/t/Os1PYre2"
+     title="سناب شات">سناب</a>
+</div>
+
 </body>
 </html>
