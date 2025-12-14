@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>إسناد الحصص للمدارس</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{font-family:Tahoma;background:#0b1220;color:#fff;margin:0;padding:20px}
+.card{background:#111a33;padding:15px;border-radius:12px;margin-bottom:15px}
+input,select,button{padding:8px;border-radius:8px;border:none;width:100%;margin-top:5px}
+button{background:#2a62ff;color:#fff;cursor:pointer}
+table{width:100%;border-collapse:collapse;margin-top:10px}
+th,td{border-bottom:1px solid #333;padding:8px;text-align:right}
+.small{color:#aaa;font-size:12px}
+</style>
+</head>
+<body>
+
+<h2>📚 موقع إسناد الحصص التعليمية</h2>
+
+<div class="card">
+<h3>1️⃣ اختيار المرحلة</h3>
+<select id="stage">
+  <option value="primary">ابتدائي</option>
+  <option value="middle">متوسط</option>
+  <option value="secondary">ثانوي</option>
+</select>
+</div>
+
+<div class="card">
+<h3>2️⃣ إضافة المعلمين</h3>
+<input id="name" placeholder="اسم المعلم">
+<select id="rank">
+  <option value="24">ممارس (24 حصة)</option>
+  <option value="22">متقدم (22 حصة)</option>
+  <option value="18">خبير (18 حصة)</option>
+</select>
+<select id="spec">
+  <option>رياضيات</option>
+  <option>علوم</option>
+  <option>لغة عربية</option>
+  <option>لغة إنجليزية</option>
+  <option>فيزياء</option>
+  <option>كيمياء</option>
+  <option>أحياء</option>
+  <option>تربية إسلامية</option>
+  <option>حاسب</option>
+</select>
+<button onclick="addTeacher()">➕ إضافة</button>
+
+<div id="teachers"></div>
+</div>
+
+<div class="card">
+<button onclick="assign()">⚖️ إسناد الحصص</button>
+</div>
+
+<div class="card">
+<h3>📊 النتائج</h3>
+<div id="results" class="small">لم يتم الإسناد بعد</div>
+</div>
+
+<div class="small">
+تنويه: هذه الحسبة تقديرية وتحتمل الصواب والخطأ، وقد تختلف القيم الفعلية حسب شروط جهة التمويل.<br>
+سلمان الجنيدي
+</div>
+
+<script>
+const teachers=[]
+const subjects={
+primary:{رياضيات:6,علوم:3,"لغة عربية":7,"تربية إسلامية":4},
+middle:{رياضيات:6,علوم:4,"لغة عربية":5,"لغة إنجليزية":4},
+secondary:{رياضيات:5,فيزياء:2,كيمياء:2,أحياء:2}
+}
+
+function addTeacher(){
+const n=name.value
+if(!n)return alert("اكتب الاسم")
+teachers.push({name:n,limit:+rank.value,spec:spec.value,load:0})
+renderTeachers()
+name.value=""
+}
+
+function renderTeachers(){
+teachersDiv=""
+teachers.forEach(t=>{
+teachersDiv+=`<div>👤 ${t.name} – ${t.spec} – ${t.load}/${t.limit}</div>`
+})
+teachers.innerHTML=teachersDiv
+}
+
+function assign(){
+teachers.forEach(t=>t.load=0)
+const stage=document.getElementById("stage").value
+const plan=subjects[stage]
+let output=""
+
+Object.keys(plan).forEach(sub=>{
+let count=plan[sub]
+for(let i=0;i<count;i++){
+let candidates=teachers.filter(t=>t.spec==sub && t.load<t.limit)
+if(candidates.length){
+candidates.sort((a,b)=>(a.load/a.limit)-(b.load/b.limit))
+candidates[0].load++
+}
+}
+})
+
+teachers.forEach(t=>{
+output+=`<div>👤 <b>${t.name}</b> – ${t.load}/${t.limit}</div>`
+})
+results.innerHTML=output
+renderTeachers()
+}
+</script>
+
+</body>
+</html>
