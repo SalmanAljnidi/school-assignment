@@ -96,7 +96,34 @@ th{background:var(--soft);font-weight:800}
       <option value="الدراسات الإسلامية"></option><option value="لغة عربية"></option><option value="رياضيات"></option><option value="علوم"></option><option value="فيزياء"></option><option value="كيمياء"></option><option value="أحياء"></option><option value="لغة إنجليزية"></option><option value="حاسب آلي"></option><option value="المهارات الرقمية"></option><option value="الدراسات الاجتماعية"></option><option value="تاريخ"></option><option value="جغرافيا"></option><option value="التربية الفنية"></option><option value="التربية البدنية"></option><option value="اقتصاد منزلي"></option><option value="المهارات الحياتية"></option><option value="علم نفس واجتماع"></option><option value="مكتبات"></option><option value="إدارة"></option><option value="تربية خاصة"></option><option value="صعوبات تعلم"></option><option value="توحد"></option><option value="إعاقة سمعية"></option><option value="إعاقة بصرية"></option><option value="تربية فكرية"></option><option value="تدريبات سلوكية"></option><option value="تدريبات نطق"></option>
     </datalist>
 
-    <div class="grid2 no-print">
+    
+    <div class="grid2" style="margin-top:10px">
+      <div>
+        <label>الصف المفضل (اختياري)</label>
+        <select id="tPref">
+          <option value="">بدون تفضيل</option>
+          <optgroup label="ابتدائي">
+            <option value="ابتدائي:1">ابتدائي 1</option>
+            <option value="ابتدائي:2">ابتدائي 2</option>
+            <option value="ابتدائي:3">ابتدائي 3</option>
+            <option value="ابتدائي:4">ابتدائي 4</option>
+            <option value="ابتدائي:5">ابتدائي 5</option>
+            <option value="ابتدائي:6">ابتدائي 6</option>
+          </optgroup>
+          <optgroup label="متوسط">
+            <option value="متوسط:1">متوسط 1</option>
+            <option value="متوسط:2">متوسط 2</option>
+            <option value="متوسط:3">متوسط 3</option>
+          </optgroup>
+        </select>
+      </div>
+      <div>
+        <label>ملاحظة</label>
+        <input value="التفضيل غير إلزامي ويُطبّق حسب الاستطاعة" disabled />
+      </div>
+    </div>
+
+<div class="grid2 no-print">
       <button onclick="addTeacher()">➕ إضافة معلم</button>
       <button class="secondary" onclick="clearTeachers()">🧹 مسح المعلمين</button>
     </div>
@@ -122,7 +149,10 @@ th{background:var(--soft);font-weight:800}
   </div>
 
   <div class="card">
-    
+    <small>
+      تنويه: هذه الحسبة تقديرية وتحتمل الصواب والخطأ، وقد تختلف القيم الفعلية حسب الأنظمة والتعليمات المعتمدة.<br/>
+      سلمان الجنيدي
+    </small>
   </div>
 </div>
 
@@ -131,6 +161,8 @@ const DATASET = {"ابتدائي | عام": {"1": {"القرآن الكريم و
 const SUBJECT_RULES = {"القرآن الكريم والدراسات الإسلامية": {"main": ["الدراسات الإسلامية"], "alt": ["لغة عربية", "الدراسات الاجتماعية", "اقتصاد منزلي"]}, "التجويد": {"main": ["الدراسات الإسلامية"], "alt": ["لغة عربية"]}, "اللغة العربية": {"main": ["لغة عربية"], "alt": []}, "الرياضيات": {"main": ["رياضيات"], "alt": []}, "العلوم": {"main": ["علوم"], "alt": ["أحياء", "كيمياء", "فيزياء"]}, "اللغة الإنجليزية": {"main": ["لغة إنجليزية"], "alt": []}, "الدراسات الاجتماعية": {"main": ["الدراسات الاجتماعية", "تاريخ", "جغرافيا"], "alt": ["لغة عربية", "الدراسات الإسلامية", "اقتصاد منزلي", "مكتبات", "إدارة"]}, "المهارات الرقمية": {"main": ["حاسب آلي", "المهارات الرقمية"], "alt": ["رياضيات"]}, "التربية الفنية": {"main": ["التربية الفنية"], "alt": ["اقتصاد منزلي"]}, "التربية البدنية والدفاع عن النفس": {"main": ["التربية البدنية"], "alt": ["اقتصاد منزلي", "التربية الفنية"]}, "المهارات الحياتية والأسرية": {"main": ["اقتصاد منزلي", "المهارات الحياتية"], "alt": ["الدراسات الاجتماعية"]}, "التفكير الناقد": {"main": ["علم نفس واجتماع"], "alt": ["الدراسات الاجتماعية", "مكتبات", "إدارة"]}, "النشاط": {"main": ["الدراسات الاجتماعية"], "alt": ["الدراسات الإسلامية", "لغة عربية", "رياضيات", "علوم", "فيزياء", "كيمياء", "أحياء", "لغة إنجليزية", "حاسب آلي", "المهارات الرقمية", "الدراسات الاجتماعية", "تاريخ", "جغرافيا", "التربية الفنية", "التربية البدنية", "اقتصاد منزلي", "المهارات الحياتية", "علم نفس واجتماع", "مكتبات", "إدارة", "تربية خاصة", "صعوبات تعلم", "توحد", "إعاقة سمعية", "إعاقة بصرية", "تربية فكرية", "تدريبات سلوكية", "تدريبات نطق"]}};
 const PROGRAMS = Object.keys(DATASET);
 const teachers = [];
+const SEP = "§§"; // فاصل آمن (لأن اسم البرنامج يحتوي |)
+
 const $ = (id)=>document.getElementById(id);
 const esc = (s)=>String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;");
 
@@ -153,7 +185,7 @@ function saveState(){
       progs,
       sections,
       allowAlt: document.getElementById("allowAlt")?.checked ?? true,
-      teachers: teachers.map(t => ({name:t.name, spec:t.spec, limit:t.limit}))
+      teachers: teachers.map(t => ({name:t.name, spec:t.spec, limit:t.limit, pref:t.pref||''}))
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }catch(e){
@@ -196,7 +228,7 @@ function loadState(){
       teachers.length = 0;
       for(const t of st.teachers){
         if(!t || !t.name || !t.spec || !t.limit) continue;
-        teachers.push({name:String(t.name), spec:String(t.spec), limit:Number(t.limit), load:0, breakdown:new Map()});
+        teachers.push({name:String(t.name), spec:String(t.spec), limit:Number(t.limit), pref:String(t.pref||''), load:0, breakdown:new Map()});
       }
       renderTeachers();
     }
@@ -267,7 +299,8 @@ function addTeacher(){
   const limit = +$("tRank").value;
   if(!name) return alert("اكتب اسم المعلم");
   if(!spec) return alert("اختر التخصص من القائمة");
-  teachers.push({name, spec, limit, load:0, breakdown:new Map()});
+  const pref = document.getElementById('tPref')?.value || '';
+  teachers.push({name, spec, limit, pref, load:0, breakdown:new Map()});
   $("tName").value=""; $("tSpec").value="";
   renderTeachers(); renderTopKPI();
   saveState();
@@ -356,7 +389,7 @@ function assignAll(){
 
     const chosen = within[0];
     chosen.load++;
-    const key = `${u.prog}|${u.grade}|${u.subj}`;
+    const key = `${u.prog}${SEP}${u.grade}${SEP}${u.subj}`;
     chosen.breakdown.set(key, (chosen.breakdown.get(key)||0)+1);
 
     if(mainSet.size && !mainSet.has(chosen.spec)) warnings.push(`بديل: ${chosen.name} (${chosen.spec}) ← ${u.subj} — ${u.prog} الصف ${u.grade}`);
@@ -382,7 +415,7 @@ function renderResults(warnings, unassigned, totalUnits){
     <tbody>`;
   for(const t of teachers){
     const over = t.load > t.limit;
-    const items = [...t.breakdown.entries()].map(([k,c])=>{ const [prog,grade,subj]=k.split("|"); return {prog,grade,subj,c}; })
+    const items = [...t.breakdown.entries()].map(([k,c])=>{ const [prog,grade,subj]=k.split(SEP); return {prog,grade,subj,c}; })
       .sort((a,b)=>a.prog.localeCompare(b.prog,'ar') || Number(a.grade)-Number(b.grade) || a.subj.localeCompare(b.subj,'ar'));
     const lines = items.map(it=>`• ${esc(it.subj)} — ${esc(it.prog)} الصف ${esc(it.grade)} (${it.c})`).join("<br>") || "—";
     html += `<tr>
@@ -403,8 +436,8 @@ function renderResults(warnings, unassigned, totalUnits){
 
   if(unassigned.length){
     const map = new Map();
-    for(const u of unassigned){ const k=`${u.prog}|${u.grade}|${u.subj}`; map.set(k,(map.get(k)||0)+1); }
-    const items=[...map.entries()].map(([k,c])=>{ const [prog,grade,subj]=k.split("|"); return {prog,grade,subj,c}; })
+    for(const u of unassigned){ const k=`${u.prog}${SEP}${u.grade}${SEP}${u.subj}`; map.set(k,(map.get(k)||0)+1); }
+    const items=[...map.entries()].map(([k,c])=>{ const [prog,grade,subj]=k.split(SEP); return {prog,grade,subj,c}; })
       .sort((a,b)=>a.prog.localeCompare(b.prog,'ar') || Number(a.grade)-Number(b.grade) || a.subj.localeCompare(b.subj,'ar'));
     html += `<hr/><div class="badge danger">حصص غير مغطاة</div><div style="margin-top:8px">`;
     for(const it of items) html += `<div style="margin:4px 0;color:var(--danger)">❌ ${esc(it.subj)} — ${esc(it.prog)} الصف ${esc(it.grade)}: ${it.c}</div>`;
