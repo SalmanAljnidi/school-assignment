@@ -2,57 +2,63 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>إسناد الحصص للمدارس</title>
+<title>نظام إسناد الحصص</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-body{font-family:Tahoma;background:#0b1220;color:#fff;margin:0;padding:20px}
+body{font-family:Tahomaa;background:#0b1220;color:#fff;margin:0;padding:15px}
+h2,h3{margin-top:0}
 .card{background:#111a33;padding:15px;border-radius:12px;margin-bottom:15px}
-input,select,button{padding:8px;border-radius:8px;border:none;width:100%;margin-top:5px}
+input,select,button{padding:8px;border-radius:8px;border:none;width:100%;margin-top:6px}
 button{background:#2a62ff;color:#fff;cursor:pointer}
 table{width:100%;border-collapse:collapse;margin-top:10px}
-th,td{border-bottom:1px solid #333;padding:8px;text-align:right}
+th,td{border-bottom:1px solid #333;padding:6px;text-align:right;font-size:14px}
 .small{color:#aaa;font-size:12px}
+.badge{background:#243a88;padding:2px 8px;border-radius:10px;font-size:12px}
+.warn{background:#8a6d00}
+.err{background:#7a0000}
 </style>
 </head>
 <body>
 
-<h2>📚 موقع إسناد الحصص التعليمية</h2>
+<h2>📘 نظام إسناد الحصص التعليمية</h2>
 
 <div class="card">
 <h3>1️⃣ اختيار المرحلة</h3>
-<select id="stage">
-  <option value="primary">ابتدائي</option>
-  <option value="middle">متوسط</option>
-  <option value="secondary">ثانوي</option>
-</select>
+<label><input type="checkbox" value="primary" checked> ابتدائي</label><br>
+<label><input type="checkbox" value="middle"> متوسط</label><br>
+<label><input type="checkbox" value="secondary"> ثانوي</label><br><br>
+عدد الفصول لكل صف:
+<input id="sections" type="number" value="1" min="1">
 </div>
 
 <div class="card">
-<h3>2️⃣ إضافة المعلمين</h3>
-<input id="name" placeholder="اسم المعلم">
-<select id="rank">
-  <option value="24">ممارس (24 حصة)</option>
-  <option value="22">متقدم (22 حصة)</option>
-  <option value="18">خبير (18 حصة)</option>
+<h3>2️⃣ إدخال المعلمين</h3>
+<input id="tName" placeholder="اسم المعلم">
+<select id="tRank">
+<option value="24">ممارس (24)</option>
+<option value="22">متقدم (22)</option>
+<option value="18">خبير (18)</option>
 </select>
-<select id="spec">
-  <option>رياضيات</option>
-  <option>علوم</option>
-  <option>لغة عربية</option>
-  <option>لغة إنجليزية</option>
-  <option>فيزياء</option>
-  <option>كيمياء</option>
-  <option>أحياء</option>
-  <option>تربية إسلامية</option>
-  <option>حاسب</option>
+<select id="tSpec">
+<option>رياضيات</option>
+<option>علوم</option>
+<option>فيزياء</option>
+<option>كيمياء</option>
+<option>أحياء</option>
+<option>لغة عربية</option>
+<option>لغة إنجليزية</option>
+<option>تربية إسلامية</option>
+<option>دراسات اجتماعية</option>
+<option>حاسب</option>
+<option>بدنية</option>
+<option>فنية</option>
 </select>
 <button onclick="addTeacher()">➕ إضافة</button>
-
 <div id="teachers"></div>
 </div>
 
 <div class="card">
-<button onclick="assign()">⚖️ إسناد الحصص</button>
+<button onclick="assign()">⚖️ تنفيذ الإسناد</button>
 </div>
 
 <div class="card">
@@ -61,58 +67,116 @@ th,td{border-bottom:1px solid #333;padding:8px;text-align:right}
 </div>
 
 <div class="small">
-تنويه: هذه الحسبة تقديرية وتحتمل الصواب والخطأ، وقد تختلف القيم الفعلية حسب شروط جهة التمويل.<br>
+تنويه: هذه الحسبة تقديرية وتحتمل الصواب والخطأ.<br>
 سلمان الجنيدي
 </div>
 
 <script>
-const teachers=[]
-const subjects={
-primary:{رياضيات:6,علوم:3,"لغة عربية":7,"تربية إسلامية":4},
-middle:{رياضيات:6,علوم:4,"لغة عربية":5,"لغة إنجليزية":4},
-secondary:{رياضيات:5,فيزياء:2,كيمياء:2,أحياء:2}
+// ================= البيانات =================
+const WEEKLY = {
+primary:{
+"1":{"لغة عربية":7,"رياضيات":6,"علوم":2,"تربية إسلامية":4},
+"2":{"لغة عربية":7,"رياضيات":6,"علوم":2,"تربية إسلامية":4},
+"3":{"لغة عربية":7,"رياضيات":6,"علوم":3,"لغة إنجليزية":2},
+"4":{"لغة عربية":6,"رياضيات":6,"علوم":4,"لغة إنجليزية":3,"دراسات اجتماعية":2}
+},
+middle:{
+"1":{"رياضيات":6,"علوم":4,"لغة عربية":5,"لغة إنجليزية":4},
+"2":{"رياضيات":6,"علوم":4,"لغة عربية":5,"لغة إنجليزية":4},
+"3":{"رياضيات":6,"علوم":4,"لغة عربية":5,"لغة إنجليزية":4}
+},
+secondary:{
+"1":{"رياضيات":5,"فيزياء":2,"كيمياء":2,"أحياء":2,"لغة عربية":4},
+"2":{"رياضيات":5,"فيزياء":2,"كيمياء":2,"أحياء":2,"لغة عربية":4},
+"3":{"رياضيات":5,"فيزياء":2,"كيمياء":2,"أحياء":2,"لغة عربية":4}
 }
+};
 
+const SUBJECT_MAP={
+"رياضيات":["رياضيات"],
+"علوم":["علوم","أحياء","كيمياء","فيزياء"],
+"فيزياء":["فيزياء"],
+"كيمياء":["كيمياء"],
+"أحياء":["أحياء"],
+"لغة عربية":["لغة عربية"],
+"لغة إنجليزية":["لغة إنجليزية"],
+"تربية إسلامية":["تربية إسلامية"],
+"دراسات اجتماعية":["دراسات اجتماعية"],
+"حاسب":["حاسب"],
+"بدنية":["بدنية"],
+"فنية":["فنية"]
+};
+
+const teachers=[];
+
+// ================= المعلمين =================
 function addTeacher(){
-const n=name.value
-if(!n)return alert("اكتب الاسم")
-teachers.push({name:n,limit:+rank.value,spec:spec.value,load:0})
-renderTeachers()
-name.value=""
+if(!tName.value)return alert("اكتب الاسم");
+teachers.push({
+name:tName.value,
+limit:+tRank.value,
+spec:tSpec.value,
+load:0,
+details:[]
+});
+tName.value="";
+renderTeachers();
 }
 
 function renderTeachers(){
-teachersDiv=""
-teachers.forEach(t=>{
-teachersDiv+=`<div>👤 ${t.name} – ${t.spec} – ${t.load}/${t.limit}</div>`
-})
-teachers.innerHTML=teachersDiv
+teachers.innerHTML=teachers.map(t=>
+`👤 ${t.name} (${t.spec}) ${t.load}/${t.limit}`
+).join("<br>");
 }
 
+// ================= الإسناد =================
 function assign(){
-teachers.forEach(t=>t.load=0)
-const stage=document.getElementById("stage").value
-const plan=subjects[stage]
-let output=""
+teachers.forEach(t=>{t.load=0;t.details=[]});
+const sections=+document.getElementById("sections").value;
+let warnings=[];
+let units=[];
 
-Object.keys(plan).forEach(sub=>{
-let count=plan[sub]
-for(let i=0;i<count;i++){
-let candidates=teachers.filter(t=>t.spec==sub && t.load<t.limit)
-if(candidates.length){
-candidates.sort((a,b)=>(a.load/a.limit)-(b.load/b.limit))
-candidates[0].load++
+// توليد الحصص
+document.querySelectorAll("input[type=checkbox]:checked").forEach(cb=>{
+const stage=cb.value;
+Object.keys(WEEKLY[stage]).forEach(grade=>{
+Object.entries(WEEKLY[stage][grade]).forEach(([sub,count])=>{
+for(let i=0;i<count*sections;i++){
+units.push({grade,sub});
 }
-}
-})
+});
+});
+});
 
+// التوزيع
+units.forEach(u=>{
+let eligible=teachers.filter(t=>SUBJECT_MAP[u.sub].includes(t.spec));
+if(!eligible.length) eligible=teachers; // بدائل
+eligible.sort((a,b)=>(a.load/a.limit)-(b.load/b.limit));
+const chosen=eligible[0];
+chosen.load++;
+chosen.details.push(`${u.sub} - صف ${u.grade}`);
+if(!SUBJECT_MAP[u.sub].includes(chosen.spec)){
+warnings.push(`استخدم بديل: ${chosen.name} لمادة ${u.sub}`);
+}
+});
+
+// النتائج
+let html="";
 teachers.forEach(t=>{
-output+=`<div>👤 <b>${t.name}</b> – ${t.load}/${t.limit}</div>`
-})
-results.innerHTML=output
-renderTeachers()
+html+=`<b>${t.name}</b> (${t.load}/${t.limit})<br>`;
+t.details.forEach(d=>html+=`• ${d}<br>`);
+html+="<hr>";
+});
+
+if(warnings.length){
+html+=`<span class="badge warn">تنبيهات: ${warnings.length}</span><br>`;
+warnings.forEach(w=>html+=`⚠️ ${w}<br>`);
+}
+
+results.innerHTML=html;
+renderTeachers();
 }
 </script>
-
 </body>
 </html>
