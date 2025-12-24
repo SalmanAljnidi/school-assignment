@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>إسناد المواد وجدولة الحصص</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<header class="app-header no-print">
+  <h1>إسناد المواد للمعلمين + جدول مبدئي + انتظار</h1>
+  <div class="toolbar">
+    <button id="btnSave" class="btn">حفظ محلي</button>
+    <button id="btnLoad" class="btn">استرجاع</button>
+    <button id="btnExport" class="btn">تصدير</button>
+    <label class="btn btn-file">
+      استيراد
+      <input id="importFile" type="file" accept="application/json" />
+    </label>
+    <button id="btnClear" class="btn btn-danger">مسح كل البيانات</button>
+    <button id="btnPrint" class="btn">طباعة</button>
+  </div>
+</header>
+
+<main class="container">
+  <section class="card">
+    <h2>1) اختيار المراحل وعدد الفصول</h2>
+    <div id="stages" class="grid"></div>
+    <div class="hint">اختر مرحلة أو أكثر، ثم أدخل عدد الفصول لكل صف.</div>
+    <div id="gradesConfig"></div>
+  </section>
+
+  <section class="card">
+    <h2>2) إدخال المعلمين</h2>
+    <div class="row no-print">
+      <input id="tName" placeholder="اسم المعلم" />
+      <select id="tSpec"></select>
+      <select id="tRank">
+        <option value="24">معلم ممارس (24)</option>
+        <option value="22">معلم متقدم (22)</option>
+        <option value="18">معلم خبير (18)</option>
+      </select>
+      <button id="btnAddTeacher" class="btn">إضافة</button>
+    </div>
+    <div id="teachersTable"></div>
+  </section>
+
+  <section class="card no-print">
+    <h2>3) تشغيل الإسناد والجدول</h2>
+    <div class="row">
+      <button id="btnAssign" class="btn btn-primary">إسناد المواد</button>
+      <button id="btnBuildSchedule" class="btn btn-primary">إنشاء جدول مبدئي</button>
+    </div>
+    <div class="hint">
+      ملاحظة: الجدول هنا "مبدئي" يلتزم بالقيود الأساسية ويقلل الفراغات قدر الإمكان. أي حصص غير موضوعة ستظهر في تقرير التعذر.
+    </div>
+    <div id="alerts"></div>
+  </section>
+
+  <section class="card">
+    <h2>4) الإسناد</h2>
+    <div id="assignmentSummary"></div>
+    <div id="unassignedSummary"></div>
+  </section>
+
+  <section class="card">
+    <h2>5) الانتظار داخل جدول المعلم</h2>
+    <div class="hint">
+      أدخل حصص الانتظار لكل معلم (لا تتجاوز المتبقي من نصابه). عند إنشاء الجدول، يتم وضع "انتظار" داخل جدول المعلم في خاناته الفارغة مع تفضيل آخر اليوم.
+    </div>
+    <div id="standbyConfig"></div>
+    <div id="standbyReports"></div>
+  </section>
+
+  <section class="card">
+    <h2>6) جداول الفصول</h2>
+    <div class="no-print row">
+      <select id="sectionSelect"></select>
+      <button id="btnShowSection" class="btn">عرض</button>
+    </div>
+    <div id="sectionTables"></div>
+    <div class="no-print">
+      <button id="btnShowAllSections" class="btn">عرض كل الفصول (شامل)</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>7) جداول المعلمين</h2>
+    <div class="no-print row">
+      <select id="teacherSelect"></select>
+      <button id="btnShowTeacher" class="btn">عرض</button>
+    </div>
+    <div id="teacherTables"></div>
+    <div class="no-print">
+      <button id="btnShowAllTeachers" class="btn">عرض كل المعلمين (شامل)</button>
+    </div>
+  </section>
+
+  <footer class="footer">
+    جميع الحقوق محفوظة لـ سلمان الجنيدي 2026
+  </footer>
+</main>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
